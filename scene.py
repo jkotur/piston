@@ -32,6 +32,7 @@ class Scene :
 		self.graph_pos = Graph( np.array((0,-10)) , np.array((100,10)) , (1,0,0) )
 		self.graph_vel = Graph( np.array((0,-7.5)) , np.array((100,12.5)) , (0,1,0) )
 		self.graph_acc = Graph( np.array((0,-5)) , np.array((100,15)) , (1,1,0) )
+		self.graph_stat= Graph( np.array((-10,-10)) , np.array((10,10)) , (.3,.1,.6) )
 
 		self.x = 0.0
 		self.t = 0.0
@@ -91,6 +92,7 @@ class Scene :
 		self.graph_pos.add( np.array((self.t , p )) )
 		self.graph_vel.add( np.array((self.t , v )) )
 		self.graph_acc.add( np.array((self.t , a )) )
+		self.graph_stat.add( np.array((p,v)) )
 
 		self.t += dt
 		self.v = v
@@ -100,6 +102,7 @@ class Scene :
 		self.graph_pos.draw()
 		self.graph_vel.draw()
 		self.graph_acc.draw()
+		self.graph_stat.draw()
 
 	def _update_proj( self ) :
 		glMatrixMode(GL_PROJECTION)
@@ -131,6 +134,15 @@ class Scene :
 		self.width  = w 
 		self.height = h
 		self.set_ratio( float(w)/float(h) )
+
+	def set_w( self , v ) :
+		self.piston.set_w(v)
+	def set_L( self , v ) :
+		self.piston.set_L(v)
+	def set_R( self , v ) :
+		self.piston.set_R(v)
+	def set_eps( self , v ) :
+		self.piston.set_eps(v)
 
 	def mouse_move( self , df , buts ) :
 		if 3 in buts and buts[3] :

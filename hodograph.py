@@ -172,8 +172,17 @@ class App(object):
 	def on_win_main_destroy(self,widget,data=None):
 		gtk.main_quit()
 		 
-	def on_but_quit_clicked(self,widget,data=None):
+	def on_quit(self,widget,data=None):
 		gtk.main_quit()
+
+	def on_w_changed(self,widget,data=None):
+		self.scene.set_w(widget.get_value())
+	def on_L_changed(self,widget,data=None):
+		self.scene.set_L(widget.get_value())
+	def on_R_changed(self,widget,data=None):
+		self.scene.set_R(widget.get_value())
+	def on_eps_changed(self,widget,data=None):
+		self.scene.set_eps(widget.get_value())
 
 if __name__ == '__main__':
 	app = App()

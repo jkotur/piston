@@ -43,7 +43,7 @@ class Graph( Drawable ) :
 		glEnableClientState(GL_VERTEX_ARRAY)
 		glColor3f(*self.color)
 		glVertexPointer( self.dim , GL_FLOAT , 0 , self.pts )
-		glDrawArrays( GL_POINTS , 0 , len(self.pts) )
+		glDrawArrays( GL_LINE_STRIP , 0 , self.curr_num )
 		glDisableClientState(GL_VERTEX_ARRAY)
 		glPopMatrix()
 		glMatrixMode(GL_PROJECTION)
