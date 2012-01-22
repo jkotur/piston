@@ -17,7 +17,8 @@ else:
     timer = time.time
 
 from camera import Camera
-from mesh import Mesh
+from piston import Piston
+from graph import Graph
 
 class Scene :
 	def __init__( self , fovy , ratio , near , far ) :
@@ -27,13 +28,16 @@ class Scene :
 		self.ratio = ratio
 
 		self.camera = None
-		self.mesh = Mesh('plane.mesh')
+		self.piston = Piston()
+		self.graph_pos = Graph( np.array((0,-10)) , np.array((100,10)) , (1,0,0) )
+		self.graph_vel = Graph( np.array((0,-7.5)) , np.array((100,12.5)) , (0,1,0) )
+		self.graph_acc = Graph( np.array((0,-5)) , np.array((100,15)) , (1,1,0) )
 
 		self.x = 0.0
+		self.t = 0.0
+		self.v = 0.0
 
 		self.last_time = timer()
-
-		self.plane_alpha = 65.0 / 180.0 * m.pi
 
 		self.lpos = [ 1 ,-1 , 0 ]
 
@@ -73,10 +77,29 @@ class Scene :
 		self.last_time = self.time
 
 	def _step( self , dt ) :
-		pass
+		dt = .01 # fixed dt causes less errors[
+
+		op = self.piston.get_p2()[0]
+		ov = self.v
+
+		self.piston.step(dt)
+
+		p = self.piston.get_p2()[0]
+		v = (p-op)/dt
+		a = (v-ov)/dt
+
+		self.graph_pos.add( np.array((self.t , p )) )
+		self.graph_vel.add( np.array((self.t , v )) )
+		self.graph_acc.add( np.array((self.t , a )) )
+
+		self.t += dt
+		self.v = v
 
 	def _draw_scene( self ) :
-		self.mesh.draw()
+		self.piston.draw()
+		self.graph_pos.draw()
+		self.graph_vel.draw()
+		self.graph_acc.draw()
 
 	def _update_proj( self ) :
 		glMatrixMode(GL_PROJECTION)

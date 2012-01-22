@@ -3,6 +3,7 @@ import sys
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
 
 import operator as op
 
@@ -12,7 +13,7 @@ from glwidget import GLDrawingArea
 
 from scene import Scene
 
-ui_file = "empty.ui"
+ui_file = "hodograph.ui"
 
 class App(object):
 	"""Application main class"""
@@ -51,14 +52,14 @@ class App(object):
 		win_main.connect('key-release-event', self._on_key_released )
 
 		self.scene = Scene( self.fov , .01 , self.near , self.far )
-		self.drawing_area.add( self.scene , ( 0,0,.5,1) )
-		self.drawing_area.add( self.scene , (.5,0,.5,1) )
+		self.drawing_area.add( self.scene , ( 0,0,1,1) )
+#        self.drawing_area.add( self.scene , (.5,0,.5,1) )
 
 		print 'Scene added'
 
 		win_main.show_all()
 
-		width = self.drawing_area.allocation.width / 2.0
+		width = self.drawing_area.allocation.width
 		height = self.drawing_area.allocation.height
 		ratio = float(width)/float(height)
 
@@ -74,7 +75,7 @@ class App(object):
 		self.drawing_area.connect('configure_event',self._on_reshape)
 		self.drawing_area.connect_after('expose_event',self._after_draw)
 
-		gtk.timeout_add( 1 , self._refresh )
+		gobject.timeout_add( 10 , self._refresh )
 
 	def _refresh( self ) :
 		self.drawing_area.queue_draw()
@@ -87,7 +88,7 @@ class App(object):
 		pass
 
 	def _on_reshape( self , widget , data=None ) :
-		width = self.drawing_area.allocation.width / 2.0
+		width = self.drawing_area.allocation.width
 		height = self.drawing_area.allocation.height
 
 		ratio = float(width)/float(height)
@@ -114,7 +115,7 @@ class App(object):
 
 	def _on_key_pressed( self , widget , data=None ) :
 		if not any(self.move) :
-			gtk.timeout_add( 20 , self._move_callback )
+			gobject.timeout_add( 20 , self._move_callback )
 
 		for i in range(len(self.dirskeys)) :
 			if (data.keyval,False) in self.dirskeys[i][0] :
